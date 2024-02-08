@@ -79,7 +79,7 @@ function RecipeCard() {
                 <h5 className="card-title">{recipe.title}</h5>
                 <p className="card-text">Ready in {recipe.readyInMinutes} minutes</p>
                 <h6 className="card-subtitle mb-2 text-muted">Ingredients:</h6>
-                <ul className="list-group">
+                <ul className="list-group list-group-light">
                   {recipe.extendedIngredients.map((ingredient, index) => (
                     <li key={index} className="list-group-item">{ingredient.original}</li>
                   ))}
