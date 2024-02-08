@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS
+DROP TABLE IF EXISTS favorite_recipe CASCADE;
 CREATE TABLE favorite_recipe (
     favorite_recipe_id INT AUTO_INCREMENT PRIMARY KEY,
     recipe_id INT,
