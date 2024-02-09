@@ -1,3 +1,4 @@
+import 'bootswatch/dist/lux/bootstrap.min.css';
 import './App.css';
 import TopNavbar from './components/TopNavBar';
 import RecipeCard from './components/RecipeCard';

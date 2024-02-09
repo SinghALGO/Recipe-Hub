@@ -85,11 +85,18 @@ function RecipeCard() {
                   ))}
                 </ul>
                 <h6 className="card-subtitle mb-2 text-muted">Steps:</h6>
-                <ol className="list-group">
+                {recipe.analyzedInstructions && recipe.analyzedInstructions[0] && recipe.analyzedInstructions[0].steps && (
+                  <ol className="list-group">
+                    {recipe.analyzedInstructions[0].steps.map((step, index) => (
+                      <li key={index} className="list-group-item">{step.step}</li>
+                    ))}
+                  </ol>
+                )}
+                {/* <ol className="list-group">
                   {recipe.analyzedInstructions[0].steps.map((step, index) => (
                     <li key={index} className="list-group-item">{step.step}</li>
                   ))}
-                </ol>
+                </ol> */}
                 <a href={recipe.sourceUrl} target="_blank" rel="noreferrer" className="btn btn-primary">View Recipe</a>
               </div>
             </div>
