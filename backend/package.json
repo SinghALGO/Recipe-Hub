@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon start"
+    "start": "nodemon start",
+    "setup-db": "node bin/setup-db.js"
   },
   "author": "",
   "license": "ISC",
