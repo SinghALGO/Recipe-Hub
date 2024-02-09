@@ -7,5 +7,6 @@ CREATE TABLE recipe (
     category_id INT,
     user_id INT,
     FOREIGN KEY (category_id) REFERENCES category(category_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    img TEXT
 );
