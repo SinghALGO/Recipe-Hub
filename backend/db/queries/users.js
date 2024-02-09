@@ -14,8 +14,8 @@ const getUserByEmail = (email) => {
     });
 }
 
-const getUserById = (user_id) => {
-  return db.query(`SELECT * FROM users WHERE users.id='${user_id}';`)
+const getUserById = (id) => {
+  return db.query(`SELECT * FROM users WHERE users.id='${id}';`)
     .then(data => {
       return data.rows;
     });
