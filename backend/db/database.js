@@ -83,6 +83,18 @@ const deleteRecipe = (recipeId) => {
     });
 };
 
+const getUserByUsernameAndPassword = async (username, password) => {
+  try {
+    const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
+    const values = [username, password];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    throw new Error('Error fetching user:', error);
+  }
+};
+
+
 module.exports = {
   getAllRecipes,
   getRecipesByCategory,
@@ -90,5 +102,6 @@ module.exports = {
   addRecipe,
   editRecipe,
   deleteRecipe,
-  getCategoriesList
+  getCategoriesList,
+  getUserByUsernameAndPassword
 };
