@@ -86,7 +86,7 @@ const useApplicationData = () => {
   const getRecipes = async () => {
     try {
       const api = await fetch(
-        `http://localhost:3008/api/recipes`
+        `http://localhost:3009/api/recipes`
       );
       const data = await api.json();
       setRecipes(data);
@@ -97,7 +97,7 @@ const useApplicationData = () => {
   const getCategories = async () => {
     try {
       const api = await fetch(
-        `http://localhost:3008/api/recipes/categories`
+        `http://localhost:3009/api/recipes/categories`
       );
       const data = await api.json();
       setCategories(data);
@@ -108,7 +108,7 @@ const useApplicationData = () => {
   const getCategoryRecipe = async () => {
     try {
       const api = await fetch(
-        `http://localhost:3008/api/recipes/category/${state.categoryId}`
+        `http://localhost:3009/api/recipes/category/${state.categoryId}`
       );
       const data = await api.json();
       setRecipes(data);
