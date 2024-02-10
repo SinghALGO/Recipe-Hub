@@ -13,6 +13,8 @@ const ACTIONS = {
 const initialState = {
   recipes: [],
   recipeData: "",
+  categories:[],
+  categoryId:"",
   modalStatus: false,
 };
 // ADD SWITCH CASE
@@ -20,6 +22,13 @@ const reducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.SET_RECIPES:
       return { ...state, recipes: action.payload };
+    case ACTIONS.SET_CATEGORIES:
+      return { ...state, categories: action.payload };//This case sets state for the topicId
+    case "SET_CATEGORY_ID":
+      return {
+        ...state,
+        categoryId: action.payload,
+      };
     case ACTIONS.ADD_RECIPE:
       return { ...state, recipes: action.payload };
     //This case will send photo data to modal and toggle modal status(true or false)
@@ -41,10 +50,21 @@ const useApplicationData = () => {
 
   useEffect(() => {
     getRecipes();
+    getCategories();
   }, []);
+
+  //useEffect runs when categoryId state changes. It checks if categoryId state is defined and is not null,empty or undefined, this way it wont run on intial render.
+  useEffect(() => {
+    if (state.categoryId) {
+       getCategoryRecipe();
+    }
+  }, [state.categoryId]);
 
   const setRecipes = (recipes) => {
     dispatch({ type: ACTIONS.SET_RECIPES, payload: recipes });
+  };
+  const setCategories = (categories) => {
+    dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
   };
 
   const addRecipe = (recipe) => {
@@ -66,12 +86,34 @@ const useApplicationData = () => {
   const getRecipes = async () => {
     try {
       const api = await fetch(
-        `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=12`
+        `http://localhost:3008/api/recipes`
       );
       const data = await api.json();
-      setRecipes(data.recipes);
+      setRecipes(data);
     } catch (error) {
       console.error("Error fetching popular recipes:", error);
+    }
+  };
+  const getCategories = async () => {
+    try {
+      const api = await fetch(
+        `http://localhost:3008/api/recipes/categories`
+      );
+      const data = await api.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  const getCategoryRecipe = async () => {
+    try {
+      const api = await fetch(
+        `http://localhost:3008/api/recipes/category/${state.categoryId}`
+      );
+      const data = await api.json();
+      setRecipes(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     }
   };
   const toggleModal = (recipe) => {
@@ -80,14 +122,18 @@ const useApplicationData = () => {
     if (recipe) {
       data = state.recipes.filter((recipeEle) => recipeEle.id === recipe.id);
     }
-    console.log(data);
     dispatch({ type: "SET_MODAL_DATA", payload: data });
+  };
+  //function to handle category being clicked in the navigation bar
+  const categoryClickHandler = (categoryId) => {
+    dispatch({ type: "SET_CATEGORY_ID", payload: categoryId });
   };
 
   return {
     state,
     handleAddRecipe,
     toggleModal,
+    categoryClickHandler
   };
 };
 

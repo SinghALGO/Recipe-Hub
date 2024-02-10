@@ -1,20 +1,18 @@
 import React from "react";
 import "./Navbar.css";
-
-const Navbar = () => {
+import CategoryList from "../CategoryList/CategoryList";
+const Navbar = ({categories, categoryClickHandler}) => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logotext">
-          <a href="#" className="navbar-brand">
+          <a href="#" className="navbar-brand" >
             RecipesHub
           </a>
         </div>
 
         <div className="navbar-links">
-          <div className="navbar-link">Category1</div>
-          <div className="navbar-link">Category2</div>
-          <div className="navbar-link">Category3</div>
+          <CategoryList categories={categories} categoryClickHandler={categoryClickHandler}/>
           <div className="navbar-link">Favorites</div>
           <div className="navbar-link">My Recipes</div>
         </div>

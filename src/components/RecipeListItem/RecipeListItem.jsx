@@ -7,7 +7,8 @@ const RecipeListItem = ({ recipe, clickHandler }) => {
     <section className="recipe-list__item" onClick={onRecipeClick}>
       <img className="recipe-list__image" src={recipe.image}></img>
       <div className="recipe-list__user-details">
-        <p>{recipe.title}</p>
+        <p>{recipe.name}</p>
+        <p>Cooking time: {recipe.cooking_time} mins</p>
       </div>
     </section>
   );

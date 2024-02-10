@@ -4,10 +4,10 @@ import HomeRoute from "./routes/HomeRoute";
 import RecipeDetailsModal from "./routes/RecipeDetailsModal";
 import useApplicationData from "./hooks/useApplicationData";
 function App() {
-  const { state, toggleModal } = useApplicationData();
+  const { state, toggleModal, categoryClickHandler } = useApplicationData();
   return (
     <div className="App">
-      <Navbar />
+      <Navbar categories={state.categories} categoryClickHandler={categoryClickHandler}/>
       <HomeRoute recipes={state.recipes} clickHandler={toggleModal} />
       {state.modalStatus && (
         <RecipeDetailsModal

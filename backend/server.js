@@ -3,11 +3,11 @@ require("dotenv").config();
 // Web server config
 const express = require("express");
 const cookieSession = require("cookie-session");
-
+const cors = require("cors");
 
 const PORT = process.env.PORT || 8080;
 const app = express();
-
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 // const userApiRoutes = require("./routes/users-api");
 const recipesApiRoutes = require("./routes/recipes-api");
