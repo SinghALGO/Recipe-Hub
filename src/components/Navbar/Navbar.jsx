@@ -2,20 +2,27 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import CategoryList from "../CategoryList/CategoryList";
 
-const Navbar = ({ categories, categoryClickHandler }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logoutHandler, favClickHandler, myRecipeClickHandler }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Implement your login logic here, interact with backend, etc.
-    // For demonstration purposes, setting isLoggedIn to true directly.
-    setIsLoggedIn(true);
+  const handleLoginClick = () => {
+    setShowModal(true);
   };
 
-  const handleLogout = () => {
-    // Implement your logout logic here, interact with backend, etc.
-    // For demonstration purposes, setting isLoggedIn to false directly.
-    setIsLoggedIn(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEmail("");
+    setPassword("");
   };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    loginHandler({email, password}); 
+    handleCloseModal();
+  };
+
 
   return (
     <nav className="navbar">
@@ -28,21 +35,45 @@ const Navbar = ({ categories, categoryClickHandler }) => {
 
         <div className="navbar-links">
           <CategoryList categories={categories} categoryClickHandler={categoryClickHandler} />
-          {isLoggedIn && <div className="navbar-link">Favorites</div>}
-          {isLoggedIn && <div className="navbar-link">My Recipes</div>}
-          {!isLoggedIn ? (
-            <div className="navbar-link" onClick={handleLogin}>
-              Login
-            </div>
+          {userId !== "" ? (
+            <>
+              <div className="navbar-link" onClick={favClickHandler}>Favorites</div>
+              <div className="navbar-link" onClick={myRecipeClickHandler}>My Recipes</div>
+              <div className="navbar-link" onClick={logoutHandler}>Logout</div>
+            </>
           ) : (
-            <div className="navbar-link" onClick={handleLogout}>
-              Logout
+            <div className="navbar-link" onClick={handleLoginClick}>
+              Login
             </div>
           )}
         </div>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="nav-modal">
+          <div className="nav-modal-content">
+            
+            <form onSubmit={handleFormSubmit}>
+              <div className="nav-modal-form-group">
+                <label>Email:</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              </div>
+              <div className="nav-modal-form-group">
+                <label>Password:</label>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              </div>
+              <div className="nav-modal-button-group">
+                <button type="submit">Login</button>
+                <button type="button" onClick={handleCloseModal}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
 
 export default Navbar;
+

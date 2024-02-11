@@ -12,10 +12,12 @@ const ACTIONS = {
 
 const initialState = {
   recipes: [],
+  favRecipes:[],
   recipeData: "",
   categories:[],
   categoryId:"",
   modalStatus: false,
+  userId: ""
 };
 // ADD SWITCH CASE
 const reducer = (state, action) => {
@@ -38,6 +40,16 @@ const reducer = (state, action) => {
         recipeData: action.payload,
         modalStatus: !state.modalStatus,
       };
+    case "SET_USER_ID":
+      return {
+        ...state,
+        userId: action.payload
+      };
+    case "SET_FAV_DATA":
+      return {
+        ...state,
+        favRecipes: action.payload
+      };
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
@@ -53,12 +65,25 @@ const useApplicationData = () => {
     getCategories();
   }, []);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('userId');
+    if (storedUser) {
+     dispatch({ type: "SET_USER_ID", payload: storedUser });
+    }
+  }, []);
+
   //useEffect runs when categoryId state changes. It checks if categoryId state is defined and is not null,empty or undefined, this way it wont run on intial render.
   useEffect(() => {
     if (state.categoryId) {
        getCategoryRecipe();
     }
   }, [state.categoryId]);
+
+  useEffect(() => {
+    if (state.userId !== "") {
+       getFavoriteRecipe();
+    }
+  }, [state.userId]);
 
   const setRecipes = (recipes) => {
     dispatch({ type: ACTIONS.SET_RECIPES, payload: recipes });
@@ -86,7 +111,7 @@ const useApplicationData = () => {
   const getRecipes = async () => {
     try {
       const api = await fetch(
-        `http://localhost:3011/api/recipes`
+        `http://localhost:3014/api/recipes`
       );
       const data = await api.json();
       setRecipes(data);
@@ -97,7 +122,7 @@ const useApplicationData = () => {
   const getCategories = async () => {
     try {
       const api = await fetch(
-        `http://localhost:3011/api/recipes/categories`
+        `http://localhost:3014/api/recipes/categories`
       );
       const data = await api.json();
       setCategories(data);
@@ -108,7 +133,7 @@ const useApplicationData = () => {
   const getCategoryRecipe = async () => {
     try {
       const api = await fetch(
-        `http://localhost:3011/api/recipes/category/${state.categoryId}`
+        `http://localhost:3014/api/recipes/category/${state.categoryId}`
       );
       const data = await api.json();
       setRecipes(data);
@@ -116,6 +141,18 @@ const useApplicationData = () => {
       console.error("Error fetching categories:", error);
     }
   };
+
+  const getFavoriteRecipe = async() => {
+     try {
+      const api = await fetch(
+        `http://localhost:3014/api/recipes/favorites/${state.userId}`
+      );
+      const data = await api.json();
+      dispatch({ type: "SET_FAV_DATA", payload: data });
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  }
   const toggleModal = (recipe) => {
     let data;
     //checking if recipe argument is non empty as no argument is sent to toggleModal function when modal is closed.
@@ -129,11 +166,58 @@ const useApplicationData = () => {
     dispatch({ type: "SET_CATEGORY_ID", payload: categoryId });
   };
 
+  //function to handle user loggin in 
+  const loginHandler = async (loginInfo) => {
+  try {
+    const response = await fetch('http://localhost:3014/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(loginInfo)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.message === 'Login successful' && data.user && data.user.id) {
+         dispatch({ type: "SET_USER_ID", payload: data.user.id });
+        localStorage.setItem('userId', data.user.id);
+      } else {
+        // Handle login failure
+        console.error('Login failed:', data.message);
+      }
+      
+    } else {
+      // Handle HTTP error
+      console.error('HTTP error:', response.status);
+    }
+  } catch (error) {
+    // Handle fetch error
+    console.error('Fetch error:', error);
+  }
+};
+
+const logoutHandler = () => {
+    dispatch({ type: "SET_USER_ID", payload: "" });
+    localStorage.removeItem('userId');
+}
+const favClickHandler = () => {
+    setRecipes(state.favRecipes);
+}
+const myRecipeClickHandler = () => {
+     let data = state.recipes.filter((recipeEle) => recipeEle.user_id === state.userId);
+     setRecipes(data);
+}
+
   return {
     state,
     handleAddRecipe,
     toggleModal,
-    categoryClickHandler
+    categoryClickHandler, 
+    loginHandler,
+    logoutHandler,
+    favClickHandler,
+    myRecipeClickHandler
   };
 };
 

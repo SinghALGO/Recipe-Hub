@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const {getUserByUsernameAndPassword} = require('./database');
+const {getUserByEmailAndPassword} = require('../db/database');
 
 // Login route
+router.get("/", (req,res) => {
+ res.json({message: "root"});
+})
 router.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  
-  getUserByUsernameAndPassword(username, password)
+  const { email, password } = req.body;
+  getUserByEmailAndPassword(email, password)
     .then(user => {
       if (user) {
          res.status(200).json({ message: 'Login successful', user: { id: user.id, name: user.username } });
       } else {
-        res.status(401).json({ message: 'Invalid username or password' });
+        res.status(401).json({ message: 'Invalid email or password' });
       }
     })
     .catch(error => {
@@ -22,7 +24,6 @@ router.post('/login', (req, res) => {
 
 // Logout route
 router.post('/logout', (req, res) => {
-  // Clear user session or token as needed
   res.status(200).json({ message: 'Logout successful' });
 });
 

@@ -1,7 +1,10 @@
 import React from "react";
 import "./RecipeDetailsModal.css";
 
-const RecipeDetailsModal = ({ recipeData, clickHandler }) => {
+const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes}) => {
+   const favRecipeIds = favRecipes.map(recipe => recipe.id);
+   const favFlag = favRecipeIds.includes(recipeData[0].id);
+   const myRecipe = recipeData[0].user_id===userId;
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -25,8 +28,16 @@ const RecipeDetailsModal = ({ recipeData, clickHandler }) => {
           
         </div>
         <div className="modal-buttons">
-           <button>Save to Favorites</button>
-           <button>Copy this template</button>
+            {userId !== "" && (
+            <>
+              {favFlag ? (
+                <button>Remove from Favorites</button>
+              ) : (
+                <button>Save to Favorites</button>
+              )}
+              {!myRecipe && <button>Copy this template</button>}
+            </>
+          )}
         </div>
        
       </div>
