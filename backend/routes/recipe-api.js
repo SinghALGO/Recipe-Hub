@@ -41,7 +41,10 @@ router.get('/category/:categoryId', (req, res) => {
     });
 });
 
+//TODO: create add fav recipe endpoint
+
 // Get favorite recipes
+//TODO: add user auth
 router.get('/favorites/:userId', (req, res) => {
   getFavoriteRecipes()
     .then(favoriteRecipes => res.json(favoriteRecipes))
@@ -51,7 +54,8 @@ router.get('/favorites/:userId', (req, res) => {
     });
 });
 
-// Add a new recipe
+// Add a new recipe 
+//TODO: add user auth
 router.post('/', (req, res) => {
   const recipeData = req.body;
   addRecipe(recipeData)
@@ -63,6 +67,7 @@ router.post('/', (req, res) => {
 });
 
 // Edit an existing recipe
+//TODO: add user auth
 router.put('/:id', (req, res) => {
   const recipeId = req.params.id;
   const updatedRecipeData = req.body;
@@ -75,6 +80,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete an existing recipe
+//TODO: add user auth
 router.delete('/:id', (req, res) => {
   const recipeId = req.params.id;
   deleteRecipe(recipeId)

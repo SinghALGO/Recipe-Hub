@@ -21,6 +21,17 @@ app.use(cookieSession({
   keys: ['MySecret']
 }));
 
+//import routes
+const loginRoutes = require('./routes/login');
+const recipeApiRoutes = require('./routes/recipe-api');
+const signUpApiRoutes = require('./routes/signUp');
+
+
+//use routes
+app.use('/api/login', loginRoutes);
+app.use('/api/recipe', recipeApiRoutes);
+app.use('/api/signUp', signUpApiRoutes);
+
 //TODO: remove only for testing 
 app.get('/', (req, res) => {
   res.status(200).json({message: 'success'});

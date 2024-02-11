@@ -21,8 +21,8 @@ const getRecipesByCategory = (categoryId) => {
 };
 
 // Get favorite recipes
-const getFavoriteRecipes = () => {
-  return db.query('SELECT * FROM ') // Replace with your query
+const getFavoriteRecipes = (id) => {
+  return db.query(`SELECT * FROM favorite_recipe JOIN recipe ON favorite_recipe.recipe_id = recipe.recipe_id WHERE users_id='${id}';`) 
     .then(result => result.rows)
     .catch(error => {
       console.error('Error fetching favorite recipes:', error);
