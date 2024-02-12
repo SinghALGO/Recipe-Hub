@@ -96,31 +96,35 @@ const getUserByEmailAndPassword = async (email, password) => {
 };
 
 // Add a new favorite
-const addNewFavorite = async (userId, recipeId) => {
-  try {
-    const query = 'INSERT INTO favorites (user_id, recipe_id) VALUES ($1, $2) RETURNING *';
-    const values = [userId, recipeId];
-    const result = await db.query(query, values);
-    return result.rows[0];
-  } catch (error) {
-    console.error('Error adding new favorite:', error);
-    throw new Error('Error adding new favorite');
-  }
+const addNewFavorite = (userId, recipeId) => {
+  const query = 'INSERT INTO favorites (user_id, recipe_id) VALUES ($1, $2) RETURNING *';
+  const values = [userId, recipeId];
+
+  return db.query(query, values)
+    .then(result => {
+      return result.rows[0];
+    })
+    .catch(error => {
+      console.error('Error adding new favorite:', error);
+      throw new Error('Error adding new favorite');
+    });
 };
 
 // Remove a favorite
-const removeFavorite = async (userId, recipeId) => {
-  try {
-    const query = 'DELETE FROM favorites WHERE user_id = $1 AND recipe_id = $2 RETURNING *';
-    const values = [userId, recipeId];
-    const result = await db.query(query, values);
-    if (result.rowCount === 0) {
-      throw new Error('Favorite not found');
-    }
-  } catch (error) {
-    console.error('Error removing favorite:', error);
-    throw new Error('Error removing favorite');
-  }
+const removeFavorite = (userId, recipeId) => {
+  const query = 'DELETE FROM favorites WHERE user_id = $1 AND recipe_id = $2 RETURNING *';
+  const values = [userId, recipeId];
+
+  return db.query(query, values)
+    .then(result => {
+      if (result.rowCount === 0) {
+        throw new Error('Favorite not found');
+      }
+    })
+    .catch(error => {
+      console.error('Error removing favorite:', error);
+      throw new Error('Error removing favorite');
+    });
 };
 
 

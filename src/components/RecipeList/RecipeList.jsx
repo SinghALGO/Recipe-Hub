@@ -1,16 +1,17 @@
 import RecipeListItem from "../RecipeListItem/RecipeListItem";
 import "./RecipeList.css";
-const RecipeList = ({ recipes, clickHandler }) => {
+const RecipeList = ({ recipes, clickHandler, myFlag }) => {
   const recipeArray = recipes.map((recipe) => {
-    const { id, image, name, cooking_time, ingredients,description, user_id } = recipe;
+    const { id, img, name, cooking_time, ingredients,description, user_id } = recipe;
     const recipeObj = {
       id,
-      image,
+      img,
       name,
       cooking_time,
       ingredients,
       description,
-      user_id
+      user_id,
+      myFlag
     };
     return <RecipeListItem key={id} recipe={recipeObj} clickHandler={clickHandler} />;
   });

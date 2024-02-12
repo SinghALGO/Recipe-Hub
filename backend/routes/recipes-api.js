@@ -8,7 +8,9 @@ const {
   addRecipe,
   editRecipe,
   deleteRecipe,
-  getCategoriesList
+  getCategoriesList,
+  addNewFavorite,
+  removeFavorite
 } = require("../db/database");
 
 // Get all recipes
@@ -48,6 +50,31 @@ router.get('/favorites/:userId', (req, res) => {
     .then(favoriteRecipes => res.json(favoriteRecipes))
     .catch(error => {
       console.error('Error fetching favorite recipes:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+});
+// Add a new favorite recipe 
+router.post('/favorites', (req, res) => {
+  console.log("inside router fav");
+  const { userId, recipeData } = req.body;
+  console.log("req body",userId,recipeData);
+  addNewFavorite(userId,recipeData)
+    .then(newFavoriteRecipe => res.status(201).json(newFavoriteRecipe))
+    .catch(error => {
+      console.error('Error adding new Favorite recipe:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+});
+
+// Remove a favorite recipe
+router.delete('/favorites/:userId/:recipeId', (req, res) => {
+  const userId = req.params.userId;
+  const recipeId = req.params.recipeId;
+  
+  removeFavorite(userId, recipeId)
+    .then(() => res.json({ message: 'Favorite recipe removed successfully' }))
+    .catch(error => {
+      console.error('Error removing favorite recipe:', error);
       res.status(500).json({ error: 'Internal server error' });
     });
 });

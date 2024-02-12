@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import CategoryList from "../CategoryList/CategoryList";
 
-const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logoutHandler, favClickHandler, myRecipeClickHandler }) => {
+const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logoutHandler, favClickHandler, myRecipeClickHandler , logoClickHandler }) => {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,9 +28,9 @@ const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logou
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logotext">
-          <a href="/" className="navbar-brand">
+          <div className="navbar-brand" onClick={logoClickHandler}>
             RecipesHub
-          </a>
+          </div>
         </div>
 
         <div className="navbar-links">

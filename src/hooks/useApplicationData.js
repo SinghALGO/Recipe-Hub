@@ -11,6 +11,7 @@ const ACTIONS = {
 };
 
 const initialState = {
+  originalRecipes:[],
   recipes: [],
   favRecipes:[],
   recipeData: "",
@@ -44,6 +45,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         userId: action.payload
+      };
+    case "SET_ORIGINAL_RECIPES":
+      return {
+        ...state,
+        originalRecipes: action.payload
       };
     case "SET_FAV_DATA":
       return {
@@ -87,6 +93,10 @@ const useApplicationData = () => {
 
   const setRecipes = (recipes) => {
     dispatch({ type: ACTIONS.SET_RECIPES, payload: recipes });
+   
+  };
+  const setOriginalRecipes = (recipes) => {
+    dispatch({ type: "SET_ORIGINAL_RECIPES", payload: recipes });
   };
   const setCategories = (categories) => {
     dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
@@ -115,6 +125,7 @@ const useApplicationData = () => {
       );
       const data = await api.json();
       setRecipes(data);
+      setOriginalRecipes(data);
     } catch (error) {
       console.error("Error fetching popular recipes:", error);
     }
@@ -158,6 +169,7 @@ const useApplicationData = () => {
     //checking if recipe argument is non empty as no argument is sent to toggleModal function when modal is closed.
     if (recipe) {
       data = state.recipes.filter((recipeEle) => recipeEle.id === recipe.id);
+      data.push(recipe.myFlag);
     }
     dispatch({ type: "SET_MODAL_DATA", payload: data });
   };
@@ -205,8 +217,63 @@ const favClickHandler = () => {
     setRecipes(state.favRecipes);
 }
 const myRecipeClickHandler = () => {
-     let data = state.recipes.filter((recipeEle) => recipeEle.user_id === state.userId);
+     let data = state.originalRecipes.filter((recipeEle) => recipeEle.user_id === state.userId);
+     data.push("my_recipes");
      setRecipes(data);
+}
+const logoClickHandler = () => {
+     getRecipes();
+}
+const remFavHandler = (userRecipeObj) => {
+    const { userId, recipeData } = userRecipeObj;
+    const url = `http://localhost:3014/api/recipes/favorites/${userId}/${recipeData}`;
+    const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  fetch(url, requestOptions)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      getFavoriteRecipe();
+      return response.json();
+    })
+    .then(data => {
+      console.log('Favorite removed successfully:', data);
+    })
+    .catch(error => {
+      console.error('Error removing favorite:', error);
+     
+    });
+}
+const addFavHandler = (userRecipeObj) => {
+  console.log("entering addFavHandler function")
+  const url = 'http://localhost:3014/api/recipes/favorites';
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userRecipeObj)
+  };
+
+  fetch(url, requestOptions)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      getFavoriteRecipe();
+      return response.json();
+    })
+    .then(data => {
+      console.log('Favorite added successfully:', data);
+    })
+    .catch(error => {
+      console.error('Error adding favorite:', error);
+    });
 }
 
   return {
@@ -217,7 +284,10 @@ const myRecipeClickHandler = () => {
     loginHandler,
     logoutHandler,
     favClickHandler,
-    myRecipeClickHandler
+    myRecipeClickHandler,
+    logoClickHandler,
+    remFavHandler,
+    addFavHandler
   };
 };
 

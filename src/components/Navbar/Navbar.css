@@ -21,6 +21,7 @@
   font-size: 1.5rem;
   color: white;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .navbar-links {
