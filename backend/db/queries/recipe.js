@@ -1,4 +1,4 @@
-const db = require('../db/connection');
+const db = require('../connection');
 
 // Get all recipes
 const getAllRecipes = () => {
@@ -30,10 +30,20 @@ const getFavoriteRecipes = (id) => {
     });
 };
 
+// add favorite recipes
+const addFavoriteRecipe = (id) => {
+  return db.query('INSERT INTO favorite_recipe (recipe_id, user_id) VALUES ($1, $2) RETURNING *', [recipe_id, user_id]) 
+    .then(result => result.rows)
+    .catch(error => {
+      console.error('Error adding favorite recipe:', error);
+      throw error;
+    });
+};
+
 // Add a new recipe
 const addRecipe = (recipeData) => {
-  const { name, description, categoryId } = recipeData;
-  return db.query('INSERT INTO recipes (name, description, category_id) VALUES ($1, $2, $3) RETURNING *', [name, description, categoryId])
+  const {ingredients, cooking_time_minutes, description, category_id, user_id, img} = recipeData;
+  return db.query('INSERT INTO recipes (ingredients, cooking_time_minutes, description, category_id, user_id, img) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [ingredients, cooking_time_minutes, description, category_id, user_id, img])
     .then(result => result.rows[0])
     .catch(error => {
       console.error('Error adding new recipe:', error);
@@ -53,9 +63,9 @@ const getCategoriesList = () => {
 
 
 // Edit an existing recipe
-const editRecipe = (recipeId, updatedRecipeData) => {
-  const { name, description, categoryId } = updatedRecipeData;
-  return db.query('UPDATE recipes SET name = $1, description = $2, category_id = $3 WHERE id = $4 RETURNING *', [name, description, categoryId, recipeId])
+const editRecipe = (recipeId, updatedRecipeData, user_id) => {
+  const { ingredients, cooking_time_minutes, description, category_id, img } = updatedRecipeData;
+  return db.query('UPDATE recipes SET ingredients = $1, cooking_time_minutes = $2, description = $3, category_id = $4, img = $5 WHERE id = $6 AND user_id = $7  RETURNING *', [ingredients, cooking_time_minutes, description, category_id, img, recipeId, user_id])
     .then(result => {
       if (result.rowCount === 0) {
         throw new Error('Recipe not found');
@@ -69,8 +79,8 @@ const editRecipe = (recipeId, updatedRecipeData) => {
 };
 
 // Delete a recipe
-const deleteRecipe = (recipeId) => {
-  return db.query('DELETE FROM recipes WHERE id = $1 RETURNING *', [recipeId])
+const deleteRecipe = (recipeId, user_id) => {
+  return db.query('DELETE FROM recipes WHERE id = $1 AND user_id = $2 RETURNING *', [recipeId, user_id])
     .then(result => {
       if (result.rowCount === 0) {
         throw new Error('Recipe not found');
@@ -89,5 +99,6 @@ module.exports = {
   addRecipe,
   editRecipe,
   deleteRecipe,
-  getCategoriesList
+  getCategoriesList,
+  addFavoriteRecipe
 };
