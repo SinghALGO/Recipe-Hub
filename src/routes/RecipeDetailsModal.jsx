@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import "./RecipeDetailsModal.css";
 import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 
-const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes, remFavHandler, addFavHandler, recipeDeleteHandler, editRecipeHandler}) => {
-   const favRecipeIds = favRecipes.map(recipe => recipe.id);
+const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes, remFavHandler, addFavHandler, recipeDeleteHandler, editRecipeHandler,saveNonLoggedFavHandler, removeNonLoggedFavHandler,publicFavs}) => {
+  let favRecipeIds;
+  if(userId !== ""){
+    favRecipeIds = favRecipes.map(recipe => recipe.id);
+  }
+  else{
+    favRecipeIds = publicFavs;
+  }
    const favFlag = favRecipeIds.includes(recipeData[0].id);
    const myRecipe = recipeData[0].user_id===userId;
   const [showEditForm, setShowEditForm] = useState(false);
@@ -14,7 +20,12 @@ const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes, remF
    const saveFavHandler = () => {
      addFavHandler({userId,recipeData:recipeData[0].id});
    }
-
+   const savNonLoggedFavHandler = () => {
+      saveNonLoggedFavHandler(recipeData[0].id);
+   }
+   const remNonLoggedFavHandler = () => {
+      removeNonLoggedFavHandler(recipeData[0].id);
+   }
    const onRecipeDelete = () => {
     recipeDeleteHandler(recipeData[0].id);
     setShowModal(false); 
@@ -59,6 +70,12 @@ const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes, remF
                 {/* {!myRecipe && <button>Copy this template</button>} */}
               </>
             )}
+            {userId ===""&&(
+            <>
+            {favFlag?(
+            <button onClick={remNonLoggedFavHandler}>Remove from Favorites</button>
+            ):(<button onClick={savNonLoggedFavHandler}>Save to Favorites</button>
+            )}</>) }
             {recipeData[1]===true?<><button onClick={handleEditClick}>Edit</button><button onClick={onRecipeDelete}>Delete</button></>:<></>}
           </div>
         </div>

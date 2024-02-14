@@ -106,3 +106,16 @@
   background-color: #2f81d9;
 }
 
+.nav-modal-form-group input,
+.nav-modal-form-group textarea,
+.nav-modal-form-group select {
+  width: 20rem;
+  height: 30px;
+  padding: 6px 12px;
+  margin-top: 4px;
+  margin-bottom: 15px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}

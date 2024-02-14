@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getUserByEmailAndPassword} = require('../db/database');
+const {getUserByEmailAndPassword, getUserByEmail,createUser} = require('../db/database');
 
 // Login route
 router.get("/", (req,res) => {
@@ -25,6 +25,20 @@ router.post('/login', (req, res) => {
 // Logout route
 router.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
+});
+//Signup
+router.post('/signup', (req, res) => {
+  const { email, password, username } = req.body;
+  
+    createUser({ email, password, username })
+        .then(newUser => {
+          res.status(201).json({ message: 'Signup successful', user: { id: newUser.id, name: newUser.username } });
+        })
+        .catch(error => {
+          console.error('Error creating user:', error);
+          res.status(500).json({ message: 'Internal server error' });
+        });
+    
 });
 
 module.exports = router;

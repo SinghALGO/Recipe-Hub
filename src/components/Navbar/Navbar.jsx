@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import CategoryList from "../CategoryList/CategoryList";
 
-const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logoutHandler, favClickHandler, myRecipeClickHandler , logoClickHandler }) => {
+const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logoutHandler, favClickHandler, myRecipeClickHandler , logoClickHandler,signupHandler }) => {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [signup, setSignup] = useState(false);
 
   const handleLoginClick = () => {
+    setShowModal(true);
+  };
+  const handleSignupClick = () => {
+    setSignup(true);
     setShowModal(true);
   };
 
@@ -15,12 +21,21 @@ const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logou
     setShowModal(false);
     setEmail("");
     setPassword("");
+    setUsername("");
+    setSignup(false);
   };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    loginHandler({email, password}); 
+    if(signup){
+        signupHandler({username, email, password});
+        handleCloseModal();
+    }
+    else{
+      loginHandler({email, password}); 
     handleCloseModal();
+    }
+    
   };
 
 
@@ -41,10 +56,14 @@ const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logou
               <div className="navbar-link" onClick={myRecipeClickHandler}>My Recipes</div>
               <div className="navbar-link" onClick={logoutHandler}>Logout</div>
             </>
-          ) : (
-            <div className="navbar-link" onClick={handleLoginClick}>
+          ) : (<><div className="navbar-link" onClick={handleLoginClick}>
               Login
             </div>
+            <div className="navbar-link" onClick={handleSignupClick}>
+              Signup
+            </div>
+            </>
+            
           )}
         </div>
       </div>
@@ -55,6 +74,10 @@ const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logou
           <div className="nav-modal-content">
             
             <form onSubmit={handleFormSubmit}>
+              {signup&& <div className="nav-modal-form-group">
+                <label>Username:</label>
+                <input type="text" className=".nav-modal-te" value={username} onChange={(e) => setUsername(e.target.value)} required />
+              </div>}
               <div className="nav-modal-form-group">
                 <label>Email:</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -64,7 +87,8 @@ const Navbar = ({ categories, categoryClickHandler, loginHandler , userId, logou
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
               <div className="nav-modal-button-group">
-                <button type="submit">Login</button>
+                {signup?<button type="submit">Signup</button>:<button type="submit">Login</button>}
+                
                 <button type="button" onClick={handleCloseModal}>Cancel</button>
               </div>
             </form>

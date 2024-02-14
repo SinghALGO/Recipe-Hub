@@ -18,7 +18,8 @@ const initialState = {
   categories:[],
   categoryId:"",
   modalStatus: false,
-  userId: ""
+  userId: "",
+  publicFavs:[]
 };
 // ADD SWITCH CASE
 const reducer = (state, action) => {
@@ -57,6 +58,11 @@ const reducer = (state, action) => {
         ...state,
         favRecipes: action.payload
       };
+       case "SET_PUBLIC_FAVS":
+      return {
+        ...state,
+        publicFavs: action.payload
+      };
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
@@ -90,7 +96,7 @@ const useApplicationData = () => {
     if (state.userId !== "") {
        getFavoriteRecipe();
     }
-  }, [state.userId, state.favRecipes]);
+  }, [state.userId]);
 
 
 
@@ -371,6 +377,51 @@ const addRecipeHandler = (newObj) => {
     console.error('Error searching recipes:', error);
   });
     }
+  const signupHandler = async(signupInfo) => {
+     const { email, password, username } = signupInfo;
+     const requestBody = JSON.stringify({ email, password, username });
+     try {
+    const response = await fetch('http://localhost:3014/api/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.message === 'Signup successful' && data.user && data.user.id) {
+         dispatch({ type: "SET_USER_ID", payload: data.user.id });
+
+        localStorage.setItem('userId', data.user.id);
+         state.publicFavs.forEach(recipeId => {
+          addFavHandler({ userId: data.user.id, recipeData:recipeId });
+        });
+      } else {
+        // Handle login failure
+        console.error('Signup failed:', data.message);
+      }
+      
+    } else {
+      // Handle HTTP error
+      console.error('HTTP error:', response.status);
+    }
+  } catch (error) {
+    // Handle fetch error
+    console.error('Fetch error:', error);
+  }
+  
+  }
+
+  const saveNonLoggedFavHandler = (recipeId) => {
+    let arr = [...state.publicFavs, recipeId];
+      dispatch({ type: "SET_PUBLIC_FAVS", payload: arr });
+  }
+  const removeNonLoggedFavHandler = (recipeId) => {
+    let arr = state.publicFavs.filter((favs) => favs !== recipeId);
+    dispatch({ type: "SET_PUBLIC_FAVS", payload: arr });
+  }
 
   return {
     state,
@@ -384,7 +435,7 @@ const addRecipeHandler = (newObj) => {
     logoClickHandler,
     remFavHandler,
     addFavHandler, 
-    addRecipeHandler, recipeDeleteHandler,editRecipeHandler,handleSearch
+    addRecipeHandler, recipeDeleteHandler,editRecipeHandler,handleSearch,signupHandler,saveNonLoggedFavHandler,removeNonLoggedFavHandler
   };
 };
 

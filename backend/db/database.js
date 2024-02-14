@@ -129,6 +129,30 @@ const getUserByEmailAndPassword = async (email, password) => {
   }
 };
 
+// Function to retrieve a user by email
+const getUserByEmail = async (email) => {
+  try {
+    const user = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    throw new Error('Error fetching user by email');
+  }
+};
+
+// Function to create a new user
+const createUser = async (userData) => {
+  
+  const { email, password, username } = userData;
+  try {
+    const newUser = await db.query('INSERT INTO users (email, password, username) VALUES ($1, $2, $3) RETURNING *', [email, password, username]);
+    return newUser.rows[0];
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw new Error('Error creating user');
+  }
+};
+
 // Add a new favorite
 const addNewFavorite = (userId, recipeId) => {
   const query = 'INSERT INTO favorites (user_id, recipe_id) VALUES ($1, $2) RETURNING *';
@@ -173,5 +197,6 @@ module.exports = {
   getUserByEmailAndPassword,
   addNewFavorite,
   removeFavorite,
-  searchRecipes
+  searchRecipes, 
+  getUserByEmail, createUser
 };

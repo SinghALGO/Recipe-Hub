@@ -50,7 +50,7 @@ const SearchForm = ({handleSearch}) => {
             Search
           </button>
            {formEmpty && (
-          <p className="search-error-message">Please enter both category and recipe name for search.</p>
+          <p className="search-error-message">Please enter either category or recipe name for search.</p>
         )}
         </form>
        
