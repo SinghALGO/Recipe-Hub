@@ -41,6 +41,7 @@ const reducer = (state, action) => {
         recipeData: action.payload,
         modalStatus: !state.modalStatus,
       };
+    
     case "SET_USER_ID":
       return {
         ...state,
@@ -89,7 +90,9 @@ const useApplicationData = () => {
     if (state.userId !== "") {
        getFavoriteRecipe();
     }
-  }, [state.userId]);
+  }, [state.userId, state.favRecipes]);
+
+
 
   const setRecipes = (recipes) => {
     dispatch({ type: ACTIONS.SET_RECIPES, payload: recipes });
@@ -125,6 +128,17 @@ const useApplicationData = () => {
       );
       const data = await api.json();
       setRecipes(data);
+      setOriginalRecipes(data);
+    } catch (error) {
+      console.error("Error fetching popular recipes:", error);
+    }
+  };
+  const getOriginalRecipes = async () => {
+    try {
+      const api = await fetch(
+        `http://localhost:3014/api/recipes`
+      );
+      const data = await api.json();
       setOriginalRecipes(data);
     } catch (error) {
       console.error("Error fetching popular recipes:", error);
@@ -250,7 +264,6 @@ const remFavHandler = (userRecipeObj) => {
     });
 }
 const addFavHandler = (userRecipeObj) => {
-  console.log("entering addFavHandler function")
   const url = 'http://localhost:3014/api/recipes/favorites';
   const requestOptions = {
     method: 'POST',
@@ -275,6 +288,89 @@ const addFavHandler = (userRecipeObj) => {
       console.error('Error adding favorite:', error);
     });
 }
+const addRecipeHandler = (newObj) => {
+  
+  fetch("http://localhost:3014/api/recipes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newObj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add recipe");
+        }
+        getOriginalRecipes();
+        myRecipeClickHandler();
+      })
+      .catch((error) => {
+        console.error("Error adding recipe:", error);
+      });
+}
+    const recipeDeleteHandler= (recipeId) => {
+         const url = `http://localhost:3014/api/recipes/${recipeId}`;
+
+   fetch(url, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to delete recipe');
+        }
+        getOriginalRecipes();
+        myRecipeClickHandler();
+        return response.json();
+    })
+    .catch(error => {
+        console.error('Error deleting recipe:', error);
+        throw error;
+    });
+    }
+
+    const editRecipeHandler = (editObj) => {
+         fetch(`http://localhost:3014/api/recipes/${editObj.recipeId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editObj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add recipe");
+        }
+        getOriginalRecipes();
+        myRecipeClickHandler();
+      })
+      .catch((error) => {
+        console.error("Error adding recipe:", error);
+      });
+    }
+    const handleSearch = (formData) => {
+      
+        fetch("http://localhost:3014/api/recipes/search", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(searchResults => {
+    setRecipes(searchResults);
+    
+   
+  })
+  .catch(error => {
+    console.error('Error searching recipes:', error);
+  });
+    }
 
   return {
     state,
@@ -287,7 +383,8 @@ const addFavHandler = (userRecipeObj) => {
     myRecipeClickHandler,
     logoClickHandler,
     remFavHandler,
-    addFavHandler
+    addFavHandler, 
+    addRecipeHandler, recipeDeleteHandler,editRecipeHandler,handleSearch
   };
 };
 

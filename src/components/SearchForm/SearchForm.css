@@ -74,3 +74,11 @@ select {
 .search-button:hover {
   background-color: #2f81d9;
 }
+.search-error-message {
+  position: absolute;
+  top: calc(50% + 10px); 
+  left: 2%;
+  width: 100%;
+  color: red; 
+  font-size: 15px; 
+}

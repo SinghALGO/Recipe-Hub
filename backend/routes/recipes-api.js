@@ -10,7 +10,8 @@ const {
   deleteRecipe,
   getCategoriesList,
   addNewFavorite,
-  removeFavorite
+  removeFavorite,
+  searchRecipes
 } = require("../db/database");
 
 // Get all recipes
@@ -19,6 +20,28 @@ router.get('/', (req, res) => {
     .then(recipes => res.json(recipes))
     .catch(error => {
       console.error('Error fetching all recipes:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+});
+
+// Search recipes route
+router.post('/search', (req, res) => {
+  const {category, recipe} = req.body;
+  searchRecipes(category, recipe)
+    .then(searchResults => res.json(searchResults))
+    .catch(error => {
+      console.error('Error searching recipes:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+});
+
+// Add a new recipe
+router.post('/', (req, res) => {
+  const recipeData = req.body;
+  addRecipe(recipeData)
+    .then(newRecipe => res.status(201).json(newRecipe))
+    .catch(error => {
+      console.error('Error adding new recipe:', error);
       res.status(500).json({ error: 'Internal server error' });
     });
 });
@@ -79,16 +102,7 @@ router.delete('/favorites/:userId/:recipeId', (req, res) => {
     });
 });
 
-// Add a new recipe
-router.post('/', (req, res) => {
-  const recipeData = req.body;
-  addRecipe(recipeData)
-    .then(newRecipe => res.status(201).json(newRecipe))
-    .catch(error => {
-      console.error('Error adding new recipe:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    });
-});
+
 
 // Edit an existing recipe
 router.put('/:id', (req, res) => {

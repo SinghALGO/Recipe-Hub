@@ -3,7 +3,7 @@ import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 import SearchForm from "../components/SearchForm/SearchForm";
 import RecipeList from "../components/RecipeList/RecipeList";
 import "./HomeRoute.css";
-const HomeRoute = ({ recipes , clickHandler}) => {
+const HomeRoute = ({ recipes , clickHandler, addRecipeHandler, userId, handleSearch}) => {
   let recipesToShow = recipes;
   let myFlag = false;
   if (recipesToShow.length > 0 && recipesToShow[recipesToShow.length - 1] === "my_recipes") {
@@ -21,12 +21,12 @@ const HomeRoute = ({ recipes , clickHandler}) => {
   };
   return (
     <div className="home-page">
-      <SearchForm />
+      <SearchForm handleSearch={handleSearch}/>
       {recipes.length > 0 && recipes[recipes.length - 1] === "my_recipes" && (
         <button onClick={handleAddRecipeClick} className="add-recipe-button">Add a new Recipe</button>
       )}
-      <RecipeList recipes={recipesToShow} clickHandler={clickHandler} myFlag={myFlag}/>
-      {showAddForm && <AddRecipeForm onClose={handleCloseForm} />}
+      <RecipeList recipes={recipesToShow} clickHandler={clickHandler} myFlag={myFlag} />
+      {showAddForm && <AddRecipeForm onClose={handleCloseForm} addRecipeHandler={addRecipeHandler} userId={userId} purpose="add" recipeId="add"/>}
     </div>
   );
 };

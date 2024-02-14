@@ -31,10 +31,40 @@ const getFavoriteRecipes = (userId) => {
     });
 };
 
+//Search recipes
+
+const searchRecipes = (categoryId, recipeName) => {
+ 
+  let query = 'SELECT * FROM recipes WHERE true'; 
+  const values = [];
+
+  if (categoryId !== '') {
+   
+    query += ` AND category_id = $${(values.length)+1}`;
+    values.push(categoryId);
+  }
+
+  if (recipeName !== '') {
+    const lowercaseRecipeName = recipeName.toLowerCase();
+    query += ` AND LOWER(name) LIKE $${(values.length)+1}`;
+    values.push(`%${lowercaseRecipeName}%`);
+  }
+
+ 
+  return db.query(query, values)
+    .then(result => result.rows)
+    .catch(error => {
+      console.error('Error searching recipes:', error);
+      throw error;
+    });
+};
+
 // Add a new recipe
 const addRecipe = (recipeData) => {
-  const { name, description, categoryId } = recipeData;
-  return db.query('INSERT INTO recipes (name, description, category_id) VALUES ($1, $2, $3) RETURNING *', [name, description, categoryId])
+  const { name,ingredients,cookingTime,description,category,userId,imageUrl} = recipeData;
+  const query = 'INSERT INTO recipes (name, ingredients,cooking_time,description, category_id,user_id,img) VALUES ($1, $2, $3,$4,$5,$6,$7) RETURNING *';
+  const values = [name,ingredients,cookingTime,description,category,userId,imageUrl];
+  return db.query(query,values)
     .then(result => result.rows[0])
     .catch(error => {
       console.error('Error adding new recipe:', error);
@@ -55,8 +85,12 @@ const getCategoriesList = () => {
 
 // Edit an existing recipe
 const editRecipe = (recipeId, updatedRecipeData) => {
-  const { name, description, categoryId } = updatedRecipeData;
-  return db.query('UPDATE recipes SET name = $1, description = $2, category_id = $3 WHERE id = $4 RETURNING *', [name, description, categoryId, recipeId])
+  const {  name,
+        ingredients,
+        cookingTime,
+        description,
+        category,imageUrl } = updatedRecipeData;
+  return db.query('UPDATE recipes SET name = $1,ingredients =$2,cooking_time = $3, description = $4, category_id = $5, img = $6 WHERE id = $7 RETURNING *', [name, ingredients,cookingTime,description, category,imageUrl,recipeId])
     .then(result => {
       if (result.rowCount === 0) {
         throw new Error('Recipe not found');
@@ -138,5 +172,6 @@ module.exports = {
   getCategoriesList,
   getUserByEmailAndPassword,
   addNewFavorite,
-  removeFavorite
+  removeFavorite,
+  searchRecipes
 };

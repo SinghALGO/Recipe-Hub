@@ -1,17 +1,38 @@
+import React, { useState } from 'react';
 import heroImage from "../../assets/hero-image.jpg";
 import "./SearchForm.css";
-const SearchForm = () => {
+const SearchForm = ({handleSearch}) => {
+  const [formData, setFormData] = useState({ category: '', recipe: '' });
+  const [formEmpty , setFormEmpty] = useState(false);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+   const handleSubmit = (e) => {
+    e.preventDefault();
+     if (formData.category === '' && formData.recipe === '') {
+      setFormEmpty(true);
+    } else {
+      setFormEmpty(false);
+      handleSearch(formData);
+    }
+  };
+
   return (
     <section className="main-hero-form">
       <div className="search-container">
-        <form className="search-form">
+        <form className="search-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="category-select">Category:</label>
-            <select id="category-select" name="category">
+            <select id="category-select" name="category" value={formData.category} onChange={handleChange}>
               <option value="">Select a category</option>
-              <option value="category1">Category 1</option>
-              <option value="category2">Category 2</option>
-              <option value="category3">Category 3</option>
+              <option value="1">Breakfast</option>
+              <option value="2">Lunch</option>
+              <option value="3">Appetizer</option>
+              <option value="4">Dessert</option>
             </select>
           </div>
           <div className="form-group">
@@ -20,13 +41,19 @@ const SearchForm = () => {
               type="text"
               id="recipe-name"
               name="recipe"
+              value={formData.recipe}
+              onChange={handleChange}
               placeholder="Enter recipe name"
             />
           </div>
           <button type="submit" className="search-button">
             Search
           </button>
+           {formEmpty && (
+          <p className="search-error-message">Please enter both category and recipe name for search.</p>
+        )}
         </form>
+       
       </div>
       <img
         src={heroImage}
