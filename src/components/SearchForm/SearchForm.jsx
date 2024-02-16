@@ -60,6 +60,7 @@ const SearchForm = ({handleSearch}) => {
         alt="Hero image of logo and dishes"
         className="hero-image"
       />
+      
     </section>
   );
 };

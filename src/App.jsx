@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <Navbar categories={state.categories} categoryClickHandler={categoryClickHandler} loginHandler={loginHandler} userId={state.userId} logoutHandler={logoutHandler} favClickHandler={favClickHandler} myRecipeClickHandler={myRecipeClickHandler} logoClickHandler={logoClickHandler} signupHandler={signupHandler}/>
-      <HomeRoute  recipes={state.recipes} clickHandler={toggleModal} favRecipes={state.favRecipes} addRecipeHandler={addRecipeHandler} userId={state.userId} handleSearch={handleSearch}/>
+      <HomeRoute recipes={state.recipes} clickHandler={toggleModal} favRecipes={state.favRecipes} addRecipeHandler={addRecipeHandler} userId={state.userId} handleSearch={handleSearch}/>
       {state.modalStatus && (
         <RecipeDetailsModal
           recipeData={state.recipeData}
