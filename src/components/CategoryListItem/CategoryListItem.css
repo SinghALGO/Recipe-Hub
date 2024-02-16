@@ -7,10 +7,10 @@
   border-radius: 5px;
   font-size: medium;
   cursor: pointer;
-  transition: background-color 0.3s; /* Add transition */
+  transition: background-color 0.3s; 
 }
 
 .topic-list__item:hover {
-  background-color: #34495e; /* Same hover color as navbar */
-  color: white; /* Text color becomes white on hover */
+  background-color: #34495e; 
+  color: white; 
 }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 import SearchForm from "../components/SearchForm/SearchForm";
@@ -35,19 +34,7 @@ const HomeRoute = ({ recipes , clickHandler, addRecipeHandler, userId, handleSea
 
 
 
-=======
-import React from "react";
-import SearchForm from "../components/SearchForm/SearchForm";
-import RecipeList from "../components/RecipeList/RecipeList";
-import "./HomeRoute.css";
-const HomeRoute = ({ recipes , clickHandler}) => {
-  return (
-    <>
-      <SearchForm />
-      <RecipeList recipes={recipes} clickHandler={clickHandler}/>
-    </>
-  );
-};
-
->>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
 export default HomeRoute;
+
+
+
