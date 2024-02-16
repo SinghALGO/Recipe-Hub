@@ -1,6 +1,10 @@
 .modal-overlay {
   position: fixed;
+<<<<<<< HEAD
   top: 50px;
+=======
+  top: 0;
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
   left: 0;
   width: 100%;
   height: 100%;

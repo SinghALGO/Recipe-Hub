@@ -18,8 +18,12 @@ const initialState = {
   categories:[],
   categoryId:"",
   modalStatus: false,
+<<<<<<< HEAD
   userId: "",
   publicFavs:[]
+=======
+  userId: ""
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
 };
 // ADD SWITCH CASE
 const reducer = (state, action) => {
@@ -42,27 +46,36 @@ const reducer = (state, action) => {
         recipeData: action.payload,
         modalStatus: !state.modalStatus,
       };
+<<<<<<< HEAD
     
+=======
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
     case "SET_USER_ID":
       return {
         ...state,
         userId: action.payload
       };
+<<<<<<< HEAD
     case "SET_ORIGINAL_RECIPES":
       return {
         ...state,
         originalRecipes: action.payload
       };
+=======
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
     case "SET_FAV_DATA":
       return {
         ...state,
         favRecipes: action.payload
       };
+<<<<<<< HEAD
        case "SET_PUBLIC_FAVS":
       return {
         ...state,
         publicFavs: action.payload
       };
+=======
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
@@ -98,6 +111,7 @@ const useApplicationData = () => {
     }
   }, [state.userId]);
 
+<<<<<<< HEAD
 
 
   const setRecipes = (recipes) => {
@@ -106,6 +120,10 @@ const useApplicationData = () => {
   };
   const setOriginalRecipes = (recipes) => {
     dispatch({ type: "SET_ORIGINAL_RECIPES", payload: recipes });
+=======
+  const setRecipes = (recipes) => {
+    dispatch({ type: ACTIONS.SET_RECIPES, payload: recipes });
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
   };
   const setCategories = (categories) => {
     dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
@@ -132,6 +150,7 @@ const useApplicationData = () => {
       const api = await fetch(
         `http://localhost:3014/api/recipes`
       );
+<<<<<<< HEAD
       const data = await api.json();
       setRecipes(data);
       setOriginalRecipes(data);
@@ -170,6 +189,34 @@ const useApplicationData = () => {
       setRecipes(data);
     } catch (error) {
       console.error("Error fetching categories:", error);
+=======
+      const data = await api.json();
+      setRecipes(data);
+    } catch (error) {
+      console.error("Error fetching popular recipes:", error);
+    }
+  };
+  const getCategories = async () => {
+    try {
+      const api = await fetch(
+        `http://localhost:3014/api/recipes/categories`
+      );
+      const data = await api.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  const getCategoryRecipe = async () => {
+    try {
+      const api = await fetch(
+        `http://localhost:3014/api/recipes/category/${state.categoryId}`
+      );
+      const data = await api.json();
+      setRecipes(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
     }
   };
 
@@ -189,7 +236,10 @@ const useApplicationData = () => {
     //checking if recipe argument is non empty as no argument is sent to toggleModal function when modal is closed.
     if (recipe) {
       data = state.recipes.filter((recipeEle) => recipeEle.id === recipe.id);
+<<<<<<< HEAD
       data.push(recipe.myFlag);
+=======
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
     }
     dispatch({ type: "SET_MODAL_DATA", payload: data });
   };
@@ -232,6 +282,7 @@ const useApplicationData = () => {
 const logoutHandler = () => {
     dispatch({ type: "SET_USER_ID", payload: "" });
     localStorage.removeItem('userId');
+<<<<<<< HEAD
 }
 const favClickHandler = () => {
     setRecipes(state.favRecipes);
@@ -422,6 +473,16 @@ const addRecipeHandler = (newObj) => {
     let arr = state.publicFavs.filter((favs) => favs !== recipeId);
     dispatch({ type: "SET_PUBLIC_FAVS", payload: arr });
   }
+=======
+}
+const favClickHandler = () => {
+    setRecipes(state.favRecipes);
+}
+const myRecipeClickHandler = () => {
+     let data = state.recipes.filter((recipeEle) => recipeEle.user_id === state.userId);
+     setRecipes(data);
+}
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
 
   return {
     state,
@@ -431,11 +492,15 @@ const addRecipeHandler = (newObj) => {
     loginHandler,
     logoutHandler,
     favClickHandler,
+<<<<<<< HEAD
     myRecipeClickHandler,
     logoClickHandler,
     remFavHandler,
     addFavHandler, 
     addRecipeHandler, recipeDeleteHandler,editRecipeHandler,handleSearch,signupHandler,saveNonLoggedFavHandler,removeNonLoggedFavHandler
+=======
+    myRecipeClickHandler
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
   };
 };
 

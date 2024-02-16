@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import "./RecipeDetailsModal.css";
 import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
@@ -83,6 +84,52 @@ const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes, remF
     )}
     {showEditForm && <AddRecipeForm onClose={handleCloseForm} purpose="edit" userId={userId} recipeId={recipeData[0].id} editRecipeHandler={editRecipeHandler}/>}
     </>
+=======
+import React from "react";
+import "./RecipeDetailsModal.css";
+
+const RecipeDetailsModal = ({ recipeData, clickHandler, userId, favRecipes}) => {
+   const favRecipeIds = favRecipes.map(recipe => recipe.id);
+   const favFlag = favRecipeIds.includes(recipeData[0].id);
+   const myRecipe = recipeData[0].user_id===userId;
+  return (
+    <div className="modal-overlay">
+      <div className="modal">
+        <div className="modal-content">
+          <span className="close" onClick={clickHandler}>
+            X
+          </span>
+          <h2>{recipeData[0].name}</h2>
+          <div className="modal-img-details">
+             <img src={recipeData[0].image} alt={recipeData[0].title} />
+             <div className="modal-para">
+              <h3>Cook time:</h3>
+               <p>{recipeData[0].cooking_time} minutes</p>
+          <h3>Ingredients:</h3>
+          <p>{recipeData[0].ingredients}</p>
+          <h3>Instructions:</h3>
+          <p>{recipeData[0].description}</p> 
+             </div>
+          </div>
+         
+          
+        </div>
+        <div className="modal-buttons">
+            {userId !== "" && (
+            <>
+              {favFlag ? (
+                <button>Remove from Favorites</button>
+              ) : (
+                <button>Save to Favorites</button>
+              )}
+              {!myRecipe && <button>Copy this template</button>}
+            </>
+          )}
+        </div>
+       
+      </div>
+    </div>
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
   );
 };
 

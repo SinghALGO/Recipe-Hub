@@ -74,6 +74,7 @@ select {
 .search-button:hover {
   background-color: #2f81d9;
 }
+<<<<<<< HEAD
 .search-error-message {
   position: absolute;
   top: calc(50% + 10px); 
@@ -85,3 +86,5 @@ select {
 }
 
 
+=======
+>>>>>>> 810cd115229d5723bd22035691566c7fe9efea16
