@@ -1,0 +1,33 @@
+.recipe-list {
+  list-style-type: none;
+  padding: 50px 70px;
+  background-color: #fff9f2;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.recipe-list:after {
+  content: "";
+  flex: 0 1 30%;
+  margin: 5px;
+}
+.surprise-button {
+  position: absolute;
+  top: 75%; 
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%);
+  padding: 0.5rem;
+  background-color: #052341;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1; /* Ensure the button appears above the recipe list */
+}
+
+.surprise-button:hover {
+  background-color: #34495e;
+}

@@ -1,31 +1,22 @@
-// load .env data into process.env
-require('dotenv').config();
+require("dotenv").config();
 
-//Web server config
-const express = require('express');
-const cookieSession = require('cookie-session');
-const bodyParser    = require("body-parser");
+// Web server config
+const express = require("express");
+const cookieSession = require("cookie-session");
+const cors = require("cors");
+
 
 const PORT = process.env.PORT || 8080;
-
 const app = express();
-
+app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
- // Added body parser for json
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+const userApiRoutes = require("./routes/users-api");
+const recipesApiRoutes = require("./routes/recipes-api");
 
-//use cookie sessions
-app.use(cookieSession({
-  name: 'session',
-  keys: ['MySecret']
-}));
-
-//TODO: remove only for testing 
-app.get('/', (req, res) => {
-  res.status(200).json({message: 'success'});
-});
+app.use("/api/users", userApiRoutes);
+app.use("/api/recipes", recipesApiRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Backend listening on port ${PORT}`);
+  console.log(`Example app listening on port ${PORT}`);
 });
